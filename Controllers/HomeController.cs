@@ -32,12 +32,12 @@ namespace EventosApagones.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Area,Tipo,Fecha,CantidadTM,Horas,Scrap,GastoReparacion,GastoTE,GastoOtroDesc,GastoOtro,Reporto")] Apagones apagón)
+        public IActionResult Create([Bind("Area,Tipo,Fecha,CantidadTM,Horas,Scrap,GastoReparacion,GastoTE,GastoOtroDesc,GastoOtro,Reporto")] Apagones apagon)
         {
             if (ModelState.IsValid)
             {
                 // Guarda el registro en la base de datos
-                _context.Add(apagón);
+                _context.Add(apagon);
                 _context.SaveChanges();
 
                 // Redirecciona a la lista principal tras un registro exitoso
@@ -45,7 +45,7 @@ namespace EventosApagones.Controllers
             }
 
             // Si los datos no son válidos, vuelve a mostrar el formulario con los errores
-            return View(apagón);
+            return View(apagon);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
