@@ -1,0 +1,123 @@
+﻿@model EventosApagones.Models.Apagones
+
+<div class="container mt-4">
+    <h2>Registrar Nuevo Apagón</h2>
+
+    <form asp-action="Create" method="post" class="needs-validation">
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <!-- Área -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Area" class="form-label">Área</label>
+                <input asp-for="Area" class="form-control" placeholder="Ej. Planta A, Logística" />
+                <span asp-validation-for="Area" class="text-danger"></span>
+            </div>
+
+            <!-- Tipo -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Tipo" class="form-label">Tipo de Apagón</label>
+                <input asp-for="Tipo" class="form-control" placeholder="Ej. Interno, Comisión Externa" />
+                <span asp-validation-for="Tipo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Fecha -->
+            <div class="col-md-4 mb-3">
+                <label asp-for="Fecha" class="form-label">Fecha y Hora</label>
+                <input asp-for="Fecha" type="datetime-local" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+
+            <!-- Cantidad TM -->
+            <div class="col-md-4 mb-3">
+                <label asp-for="CantidadTM" class="form-label">Cantidad TM</label>
+                <input asp-for="CantidadTM" type="number" class="form-control" min="0" />
+                <span asp-validation-for="CantidadTM" class="text-danger"></span>
+            </div>
+
+            <!-- Horas -->
+            <div class="col-md-4 mb-3">
+                <label asp-for="Horas" class="form-label">Horas de Duración</label>
+                <input asp-for="Horas" type="number" class="form-control" min="0" />
+                <span asp-validation-for="Horas" class="text-danger"></span>
+            </div>
+        </div>
+
+        <h4 class="mt-4 text-secondary">Costos e Impacto Financiero</h4>
+        <hr />
+
+        <div class="row">
+            <!-- Scrap -->
+            <div class="col-md-4 mb-3">
+                <label asp-for="Scrap" class="form-label">Costo de Scrap (Merma)</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="Scrap" type="number" class="form-control" min="0" />
+                </div>
+                <span asp-validation-for="Scrap" class="text-danger"></span>
+            </div>
+
+            <!-- Gasto Reparación -->
+            <div class="col-md-4 mb-3">
+                <label asp-for="GastoReparacion" class="form-label">Gasto de Reparación</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="GastoReparacion" type="number" class="form-control" min="0" />
+                </div>
+                <span asp-validation-for="GastoReparacion" class="text-danger"></span>
+            </div>
+
+            <!-- Gasto TE -->
+            <div class="col-md-4 mb-3">
+                <label asp-for="GastoTE" class="form-label">Gasto Tiempo Extra (TE)</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="GastoTE" type="number" class="form-control" min="0" />
+                </div>
+                <span asp-validation-for="GastoTE" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Gasto Otro Descripción -->
+            <div class="col-md-8 mb-3">
+                <label asp-for="GastoOtroDesc" class="form-label">Descripción de Otro Gasto</label>
+                <input asp-for="GastoOtroDesc" class="form-control" placeholder="Ej. Renta de generador, penalización" />
+                <span asp-validation-for="GastoOtroDesc" class="text-danger"></span>
+            </div>
+
+            <!-- Gasto Otro -->
+            <div class="col-md-4 mb-3">
+                <label asp-for="GastoOtro" class="form-label">Monto de Otro Gasto</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="GastoOtro" type="number" class="form-control" min="0" />
+                </div>
+                <span asp-validation-for="GastoOtro" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Reportó -->
+            <div class="col-md-12 mb-4">
+                <label asp-for="Reporto" class="form-label">Personal que Reportó</label>
+                <input asp-for="Reporto" class="form-control" placeholder="Nombre completo o ID de empleado" />
+                <span asp-validation-for="Reporto" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Guardar Reporte</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

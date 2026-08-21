@@ -1,0 +1,144 @@
+﻿@model IEnumerable<EventosApagones.Models.Apagones>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Registro Histórico de Apagones</h2>
+        <!-- Botón para ir al formulario de creación -->
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Registrar Nuevo Apagón
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            No hay eventos de apagones registrados hasta el momento.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover table-striped align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Área</th>
+                        <th>Tipo</th>
+                        <th>Fecha y Hora</th>
+                        <th class="text-center">Cant. TM</th>
+                        <th class="text-center">Horas</th>
+                        <th class="text-end">Total Gastos</th>
+                        <th>Reportó</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        // Cálculo dinámico de la suma de gastos por fila
+                        var totalGastos = item.Scrap + item.GastoReparacion + item.GastoTE + (item.GastoOtro ?? 0);
+
+                        <tr>
+                            <td class="fw-bold">@item.Area</td>
+                            <td><span class="badge bg-secondary">@item.Tipo</span></td>
+                            <td>@item.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="text-center">@item.CantidadTM</td>
+                            <td class="text-center">@item.Horas hrs</td>
+                            <td class="text-end text-danger fw-bold">@totalGastos.ToString("C0")</td>
+                            <td>@item.Reporto</td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button"
+                                            class="btn btn-info text-white btn-sm btn-detalle"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#detailsModal"
+                                            data-area="@item.Area"
+                                            data-tipo="@item.Tipo"
+                                            data-fecha="@item.Fecha.ToString("dd/MM/yyyy HH:mm")"
+                                            data-cantidad="@item.CantidadTM"
+                                            data-horas="@item.Horas"
+                                            data-scrap="@item.Scrap.ToString("C0")"
+                                            data-reparacion="@item.GastoReparacion.ToString("C0")"
+                                            data-te="@item.GastoTE.ToString("C0")"
+                                            data-otrodesc="@(item.GastoOtroDesc ?? "Ninguno")"
+                                            data-otromonto="@((item.GastoOtro ?? 0).ToString("C0"))"
+                                            data-reporto="@item.Reporto">
+                                        Ver
+                                    </button>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning" title="Editar">Editar</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<!-- Modal de Detalles -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="detailsModalLabel">Detalle Técnico del Apagón</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <!-- Sección Operativa -->
+                    <div class="col-md-6 border-end">
+                        <h6 class="text-primary fw-bold mb-3"><i class="bi bi-gear-fill"></i> Datos Operativos</h6>
+                        <p><strong>Área Afectada:</strong> <span id="modalArea"></span></p>
+                        <p><strong>Tipo de Falla:</strong> <span id="modalTipo" class="badge bg-secondary"></span></p>
+                        <p><strong>Fecha y Hora:</strong> <span id="modalFecha"></span></p>
+                        <p><strong>Cantidad TM:</strong> <span id="modalCantidad"></span></p>
+                        <p><strong>Duración del Evento:</strong> <span id="modalHoras"></span> hrs</p>
+                        <p><strong>Reportó:</strong> <span id="modalReporto"></span></p>
+                    </div>
+
+                    <!-- Sección Financiera -->
+                    <div class="col-md-6 ps-md-4">
+                        <h6 class="text-danger fw-bold mb-3"><i class="bi bi-currency-dollar"></i> Desglose de Gastos</h6>
+                        <p><strong>Costo de Scrap:</strong> <span id="modalScrap" class="text-dark"></span></p>
+                        <p><strong>Gasto de Reparación:</strong> <span id="modalReparacion" class="text-dark"></span></p>
+                        <p><strong>Gasto Tiempo Extra:</strong> <span id="modalTE" class="text-dark"></span></p>
+                        <hr />
+                        <p class="mb-1"><strong>Otros Gastos (Descripción):</strong></p>
+                        <p class="text-muted small italic bg-light p-2 rounded" id="modalOtroDesc"></p>
+                        <p><strong>Monto Otro Gasto:</strong> <span id="modalOtroMonto"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar Ventana</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const botonesDetalle = document.querySelectorAll(".btn-detalle");
+
+            botonesDetalle.forEach(boton => {
+                boton.addEventListener("click", function () {
+                    // Mapeo de datos desde el botón a los elementos del modal
+                    document.getElementById("modalArea").textContent = this.getAttribute("data-area");
+                    document.getElementById("modalTipo").textContent = this.getAttribute("data-tipo");
+                    document.getElementById("modalFecha").textContent = this.getAttribute("data-fecha");
+                    document.getElementById("modalCantidad").textContent = this.getAttribute("data-cantidad");
+                    document.getElementById("modalHoras").textContent = this.getAttribute("data-horas");
+                    document.getElementById("modalReporto").textContent = this.getAttribute("data-reporto");
+
+                    document.getElementById("modalScrap").textContent = this.getAttribute("data-scrap");
+                    document.getElementById("modalReparacion").textContent = this.getAttribute("data-reparacion");
+                    document.getElementById("modalTE").textContent = this.getAttribute("data-te");
+                    document.getElementById("modalOtroDesc").textContent = this.getAttribute("data-otrodesc");
+                    document.getElementById("modalOtroMonto").textContent = this.getAttribute("data-otromonto");
+                });
+            });
+        });
+    </script>
+}
+

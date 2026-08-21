@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EventosApagones</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EventosApagones.styles.css" asp-append-version="true" />
+    <style>
+        .sidebar-responsive {
+            width: 100%;
+            z-index: 1040;
+        }
+
+        .main-content-responsive {
+            margin-top: 85px;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd !important;
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        /* Comportamiento exclusivo para Computadora (Pantallas >= 992px) */
+        @@media (min-width: 992px) {
+            .sidebar-responsive {
+                position: fixed !important;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: 260px !important;
+                z-index: 1030;
+                display: flex !important;
+            }
+
+            .main-content-responsive {
+                margin-left: 260px;
+                margin-top: 0 !important;
+            }
+
+            .navbar-toggler {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra superior fija exclusiva para Celulares y Tablets -->
+    <nav class="navbar navbar-dark bg-dark d-lg-none px-3 fixed-top shadow py-2">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="d-flex flex-column align-items-center ms-auto me-auto">
+            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mb-1" style="width: 45px; height: 45px;">
+                <img src="~/Images/Logo.png" alt="Logo" style="max-height: 75%; max-width: 75%; object-fit: contain;" />
+            </div>
+            <span class="navbar-brand fs-6 fw-bold m-0 p-0">TGRMX Inventario</span>
+        </div>
+    </nav>
+    <div class="container-fluid p-0">
+        <div class="d-flex flex-column flex-lg-row">
+            <div class="collapse d-lg-flex flex-column p-3 text-white bg-dark shadow-lg sidebar-responsive h-auto m-0 border-0" id="sidebarMenu">
+                <div class="pt-4 pt-lg-0 d-flex flex-column h-100 w-100">
+                    <!-- Encabezado de la barra lateral (Computadora / Menú abierto) -->
+                    <div class="d-flex align-items-center mb-4 px-2 mt-3 mt-lg-0">
+                        <a href="/Descontar/Index" class="d-flex flex-column align-items-center text-white text-decoration-none w-100">
+                            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mb-2 shadow-sm" style="width: 90px; height: 90px;">
+                                <img src="~/Images/Logo.png" alt="Logo" style="max-height: 75%; max-width: 75%; object-fit: contain;" />
+                            </div>
+                            <span class="fs-4 fw-bold text-nowrap">TGRMX Inventario</span>
+                        </a>
+                    </div>
+
+                    <hr class="border-secondary my-2">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Eventos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Create">Nuevo evento</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+     </div>
+
+    <div class="container">
+        <main class="flex-grow-1 p-4 main-content-responsive" id="dashboardPrincipal">
+            @RenderBody()
+        </main>
+    </div>
+
+@*     <footer class="border-top footer text-muted">
+        <div class="flex-grow-1 p-4 main-content-responsive" id="dashboardPrincipal">
+            &copy; 2026 - EventosApagones - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer> *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
