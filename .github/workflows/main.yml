@@ -25,3 +25,8 @@ jobs:
         context: .
         push: true
         tags: iotdepartment/eventosapagones:latest
+
+
+
+
+        
